@@ -4,6 +4,7 @@ import ffs.misaw.todoismo.dataclasses.Task
 import ffs.misaw.todoismo.services.TaskService
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
@@ -22,19 +23,9 @@ class TaskController (private val taskService: TaskService){
 @Controller
 class HtmlController (private val taskService: TaskService) {
     @GetMapping(value = ["/api/tasks/html"], produces = [MediaType.TEXT_HTML_VALUE])
-    @ResponseBody
-    fun welcomeAsHTML(): String {
-
+    fun tasksAsHTML(model: Model): String {
         val tasks = taskService.getAllTasks()
-        val stringBuilder = StringBuilder()
-
-        for (task in tasks) {
-            stringBuilder.append("<tr>")
-            stringBuilder.append("<td>${task.id}</td>")
-            stringBuilder.append("<td>${task.description}</td>")
-            stringBuilder.append("</tr>")
-        }
-
-        return stringBuilder.toString().trimIndent()
+        model.addAttribute("tasks", tasks)
+        return "tasks"
     }
 }
