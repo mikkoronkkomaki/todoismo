@@ -1,4 +1,9 @@
-<tr th:each="task : ${tasks}">
-    <td th:text="${task.id}"></td>
-    <td th:text="${task.description}"></td>
-</tr>
+<table id="tasksTable">
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.id}"></td>
+        <td th:text="${task.description}"></td>
+        <td>
+            <button th:attr="hx-delete='/api/tasks/' + ${task.id}" hx-trigger="click" hx-swap="outerHTML">Delete</button>
+        </td>
+    </tr>
+</table>
