@@ -1,0 +1,47 @@
+version: '2'
+services:
+  todoismo-db:
+    image: kartoza/postgis:16-3.4--v2023.11.04
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: todoismo
+      POSTGRES_USER: todoismo
+      POSTGRES_PASSWORD: todoismo
+      ALLOW_IP_RANGE: 0.0.0.0/0
+      SHARED_PRELOAD_LIBRARIES: 'pg_cron,pg_stat_statements'
+
+  migraatio:
+    build: ./flyway-psql
+    entrypoint: |
+      /bin/bash -c "
+        until flyway -url=jdbc:postgresql://todoismo-db/todoismo -user=todoismo -password=todoismo info &>/dev/null; do
+          echo Odotetaan että Flyway saa yhteyden kantaan...
+          sleep 0.5
+        done
+
+        # Bugin kierto https://github.com/petere/homebrew-postgresql/issues/51
+        PGGSSENCMODE=disable
+
+        echo Poistetaan hstore extension
+        PGPASSWORD=todoismo psql -h todoismo-db -p 5432 -U todoismo -c \"DROP EXTENSION hstore;\"
+        echo 'Lisätään btree_gist extension (version-voimassaolo constrainteja varten)'
+        PGPASSWORD=todoismo psql -h todoismo-db -p 5432 -U todoismo -c \"CREATE EXTENSION btree_gist;\"
+
+        echo -e '\e[1m\e[35m--- Ajetaan migraatiot ---\e[0m'
+        flyway -url=jdbc:postgresql://todoismo-db/todoismo -schemas=todoismo -locations=filesystem:/database/flyway -user=todoismo -password=todoismo migrate
+        echo -e '\e[1m\e[32m--- Migraatiot ajettu ---\e[0m'
+
+        echo -e '\e[1m\e[35m--- Ajetaan testidata ---\e[0m'
+        PGPASSWORD=todoismo psql -h todoismo-db -p 5432 -U todoismo todoismo -X -a -v ON_ERROR_STOP=1 --pset pager=off -f /database/testdata/init-testdata.sql > /dev/null
+        echo -e '\e[1m\e[32m--- Testidata ajettu ---\e[0m'                    
+
+        echo -e '\e[1m\e[32m\e[5m\e[4m--- Todoismo-tietokanta pystyssä. Älä sulje tätä komentokehotetta. Voit aloittaa käytön. ---\e[0m'
+        "
+
+    volumes:
+      - ./database/flyway/:/database/flyway
+      - ./database/testdata/:/database/testdata
+
+    links:
+      - todoismo-db

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo list</title>
+    <script
+            src="https://unpkg.com/htmx.org@1.9.6"
+            integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
+            crossorigin="anonymous"
+    ></script>
+</head>
+<body>
+
+<h1>Tasks</h1>
+
+<table id="tasksTable">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>description</th>
+    </tr>
+    </thead>
+    <tbody hx-get="/api/tasks/html" hx-swap="innerHTML" hx-trigger="load">
+    </tbody>
+</table>
+
+</body>
+</html>
+
