@@ -16,27 +16,6 @@ class TaskController(private val taskService: TaskService) {
         val tasks = taskService.getAllTasks()
         return tasks
     }
-
-    @PostMapping
-    fun createTask(@RequestParam description: String): ResponseEntity<String> {
-        val task = taskService.saveTask(description)
-        return ResponseEntity.ok(
-            """      
-        <div hx-swap="outerHTML" hx-get="/api/tasks/html" hx-trigger="revealed"></div>
-    """.trimIndent()
-        )
-    }
-
-    @DeleteMapping("/{id}")
-    fun deleteTask(@PathVariable id: Long): ResponseEntity<String> {
-        taskService.deleteTask(id)
-        
-        return ResponseEntity.ok(
-            """
-        <div hx-swap="outerHTML" hx-get="/api/tasks/html" hx-trigger="revealed" hx-target="#tasksTable"></div>
-    """.trimIndent()
-        )
-    }
 }
 
 @Controller
@@ -46,6 +25,20 @@ class HtmlController(private val taskService: TaskService) {
         val tasks = taskService.getAllTasks()
         model.addAttribute("tasks", tasks)
         return "tasks"
+    }
+
+    @PostMapping(value = ["/api/tasks"], produces = [MediaType.TEXT_HTML_VALUE])
+    fun createTask(@RequestParam description: String, model: Model): String {
+        val task = taskService.saveTask(description)
+        model.addAttribute("task", task)
+        return "createTask"
+    }
+
+    @DeleteMapping(value = ["/api/tasks/{id}"], produces = [MediaType.TEXT_HTML_VALUE])
+    fun deleteTask(@PathVariable id: Long, model: Model): String {
+        taskService.deleteTask(id)
+        model.addAttribute("id", id)
+        return "deleteTask"
     }
 }
 
