@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tasks</title>
+    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
+</head>
+<body>
+
+<h1>Tasks</h1>
+
+<script>
+    let id = '';
+    let description = '';
+
+    function addTask(event) {
+        event.preventDefault();
+        // Here you can add the logic to add the new task
+        console.log(`Adding task with id ${id} and description ${description}`);
+        id = '';
+        description = '';
+    }
+</script>
+
+<form on:submit={addTask}>
+    <label for="id">Task ID:</label>
+    <input id="id" bind:value={id} type="text" required>
+
+    <label for="description">Task Description:</label>
+    <input id="description" bind:value={description} type="text" required>
+
+    <button type="submit">Add Task</button>
+</form>
+
+<form hx-post="/api/tasks" hx-trigger="submit" hx-target="#tasksTable" hx-swap="outerHTML">
+    <input type="text" name="description" placeholder="New task">
+    <button type="submit">Add Task</button>
+</form>
+</body>
+</html>
