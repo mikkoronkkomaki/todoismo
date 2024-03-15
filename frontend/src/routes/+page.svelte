@@ -3,8 +3,20 @@
     import Search from "../Search.svelte";
 </script>
 
+<style>
+    .content {
+        width: 800px;
+        margin: 0 auto;
+        white-space: nowrap;
+    }
+    .display-1 {
+        text-align: center; 
+    }
+</style>
+
+
 <div class="d-flex justify-content-center align-items-center">
-    <div>
+    <div class="content">
         <h1 class="display-1">TODOISMO!</h1>
         <div class="my-sm-4">
             <TaskForm></TaskForm>

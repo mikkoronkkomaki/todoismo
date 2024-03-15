@@ -1,10 +1,14 @@
 <script>
     import { onMount } from 'svelte';
+
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+
     let searchQuery = '';
     let searchResults = [];
 
     async function searchTasks() {
-        const response = await fetch(`http://localhost:8080/api/tasks/search?query=${searchQuery}`, {
+        const response = await fetch(`${API_BASE_URL}/api/tasks/search?query=${searchQuery}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -18,7 +22,7 @@
     }
 
     async function deleteTask(id) {
-        const response = await fetch(`http://localhost:8080/api/tasks/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/tasks/${id}`, {
             method: 'DELETE',
         });
         if (response.ok) {
@@ -29,7 +33,7 @@
     }
 
     async function saveTask(task) {
-        const response = await fetch(`http://localhost:8080/api/tasks/${task.id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/tasks/${task.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
