@@ -19,8 +19,21 @@
     }
 </script>
 
+<style>
+    .flex-grow {
+        flex-grow: 1;
+    }
+    .no-wrap {
+        white-space: nowrap;
+    }
+    .btn-width {
+        width: 200px;
+    }
+</style>
+
 <form on:submit={submitForm}>
-    <label for="description">Description:</label>
-    <input id="description" bind:value={description} required>
-    <button type="submit">Add Task</button>
+    <div class="d-flex justify-content-between">
+        <input id="description" bind:value={description} required class="form-control flex-grow">
+        <button type="submit" class="btn btn-primary ms-2 no-wrap btn-width">Add Task</button>
+    </div>
 </form>

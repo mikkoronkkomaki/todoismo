@@ -29,12 +29,25 @@
     }
 </script>
 
-<div>
-    <input type="text" bind:value={searchQuery} placeholder="Search tasks">
-    <button on:click={searchTasks}>Search</button>
+
+<style>
+    .flex-grow {
+        flex-grow: 1;
+    }
+    .no-wrap {
+        white-space: nowrap;
+    }
+    .btn-width {
+        width: 200px;
+    }
+</style>
+
+<div class="d-flex justify-content-between">
+    <input type="text" bind:value={searchQuery} placeholder="Search tasks" required class="form-control flex-grow">
+    <button class="btn btn-primary ms-2 no-wrap btn-width" on:click={searchTasks}>Search</button>
 </div>
 
-<table>
+<table class="table table-striped my-sm-2">
     <thead>
     <tr>
         <th>ID</th>
@@ -47,7 +60,7 @@
         <tr>
             <td>{task.id}</td>
             <td>{task.description}</td>
-            <td><button on:click={() => deleteTask(task.id)}>Delete</button></td>
+            <td><button on:click={() => deleteTask(task.id)} class="btn btn-danger">Delete</button></td>
         </tr>
     {/each}
     </tbody>
