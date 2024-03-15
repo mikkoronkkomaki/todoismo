@@ -1,7 +1,6 @@
 package ffs.misaw.todoismo.services
 
 import ffs.misaw.todoismo.dataclasses.Task
-import org.elasticsearch.client.RestHighLevelClient
 import org.springframework.stereotype.Service
 import java.net.URI
 import java.net.http.HttpClient
@@ -11,7 +10,7 @@ import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Value
 
 @Service
-class ElasticService(private val client: RestHighLevelClient) {
+class ElasticService {
     @Value("\${elasticsearch.baseUrl}")
     private lateinit var baseUrl: String
     private val httpClient = HttpClient.newHttpClient()
