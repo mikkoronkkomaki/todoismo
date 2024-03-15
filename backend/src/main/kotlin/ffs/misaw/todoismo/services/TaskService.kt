@@ -23,6 +23,10 @@ class TaskService(
         elasticService.indexTaskToElasticsearch(newTask)
         return newTask
     }
+    fun updateTask(id: Long, description: String) {
+        taskRepository.updateTask(id, description)
+        elasticService.updateTaskInElasticsearch(id, description)
+    }
 
     fun deleteTask(id: Long) {
         taskRepository.deleteTask(id)

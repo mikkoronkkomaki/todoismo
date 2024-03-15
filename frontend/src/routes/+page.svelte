@@ -1,6 +1,6 @@
 <script>
     import TaskForm from "../TaskForm.svelte";
-    import Seach from "../Seach.svelte";
+    import Search from "../Search.svelte";
 </script>
 
 <div class="d-flex justify-content-center align-items-center">
@@ -10,7 +10,7 @@
             <TaskForm></TaskForm>
         </div>
         <div class="my-sm-4">
-            <Seach></Seach>
+            <Search></Search>
         </div>
     </div>
 </div>

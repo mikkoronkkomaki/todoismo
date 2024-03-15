@@ -74,4 +74,18 @@ class ElasticService {
 
         return tasks
     }
+
+    fun updateTaskInElasticsearch(id: Long, description: String) {
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("${baseUrl}/tasks/_doc/$id/_update"))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString("{\"doc\": {\"description\": \"${description}\"}}"))
+            .build()
+
+        val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+
+        if (response.statusCode() != 200) {
+            throw RuntimeException("Failed to update task in Elasticsearch: ${response.body()}")
+        }
+    }
 }

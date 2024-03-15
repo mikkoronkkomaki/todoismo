@@ -33,7 +33,7 @@
 
 <form on:submit={submitForm}>
     <div class="d-flex justify-content-between">
-        <input id="description" bind:value={description} required class="form-control flex-grow">
+        <input id="description" bind:value={description} required class="form-control flex-grow" placeholder="Task description">
         <button type="submit" class="btn btn-primary ms-2 no-wrap btn-width">Add Task</button>
     </div>
 </form>

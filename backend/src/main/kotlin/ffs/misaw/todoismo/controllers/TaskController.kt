@@ -25,6 +25,12 @@ class TaskController(
         return ResponseEntity.ok(savedTask)
     }
 
+    @PutMapping("{id}")
+    fun updateTask(@PathVariable id: Long, @RequestBody task: Task): ResponseEntity<Void> {
+        taskService.updateTask(id, task.description)
+        return ResponseEntity.noContent().build()
+    }
+
     @DeleteMapping("{id}")
     fun deleteTask(@PathVariable id: Long): ResponseEntity<Void> {
         taskService.deleteTask(id)

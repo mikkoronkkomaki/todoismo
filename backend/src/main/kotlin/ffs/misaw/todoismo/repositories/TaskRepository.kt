@@ -55,4 +55,12 @@ class TaskRepository(private val jdbcTemplate: JdbcTemplate) {
             id
         )
     }
+
+    fun updateTask(id: Long, description: String) {
+        jdbcTemplate.update(
+            "UPDATE task SET description = ? WHERE id = ?",
+            description,
+            id
+        )
+    }
 }

@@ -27,6 +27,22 @@
             console.error('Failed to delete task');
         }
     }
+
+    async function saveTask(task) {
+        const response = await fetch(`http://localhost:8080/api/tasks/${task.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ description: task.description })
+        });
+        if (response.ok) {
+            const updatedTask = { ...task, isEditing: false };
+            searchResults = searchResults.map(t => t.id === task.id ? updatedTask : t);
+        } else {
+            console.error('Failed to update task');
+        }
+    }
 </script>
 
 
@@ -39,6 +55,9 @@
     }
     .btn-width {
         width: 200px;
+    }
+    .btn-width-small {
+        width: 100px;
     }
 </style>
 
@@ -59,8 +78,22 @@
     {#each searchResults as task (task.id)}
         <tr>
             <td>{task.id}</td>
-            <td>{task.description}</td>
-            <td><button on:click={() => deleteTask(task.id)} class="btn btn-danger">Delete</button></td>
+            <td>
+                {#if task.isEditing}
+                    <input type="text" bind:value={task.description} class="form-control">
+                {:else}
+                    {task.description}
+                {/if}
+            </td>
+            <td>
+                {#if task.isEditing}
+                    <button on:click={() => saveTask(task)} class="btn btn-width-small btn-success">Save</button>
+                    <button on:click={() => task.isEditing = false} class="btn btn-width-small btn-warning">Cancel</button>
+                {:else}
+                    <button on:click={() => task.isEditing = true} class="btn btn-width-small btn-primary">Edit</button>
+                    <button on:click={() => deleteTask(task.id)} class="btn btn-width-small btn-danger">Delete</button>
+                {/if}
+            </td>
         </tr>
     {/each}
     </tbody>
