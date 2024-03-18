@@ -20,16 +20,16 @@ class TaskService(
 
     fun saveTask(description: String): Task {
         val newTask = taskRepository.saveTask(description)
-        elasticService.indexTaskToElasticsearch(newTask)
+        elasticService.indexTask(newTask)
         return newTask
     }
     fun updateTask(id: Long, description: String) {
         taskRepository.updateTask(id, description)
-        elasticService.updateTaskInElasticsearch(id, description)
+        elasticService.updateTask(id, description)
     }
 
     fun deleteTask(id: Long) {
         taskRepository.deleteTask(id)
-        elasticService.deleteTaskFromElasticsearch(id)
+        elasticService.deleteTask(id)
     }
 }
