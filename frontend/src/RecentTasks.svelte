@@ -9,7 +9,7 @@
     });
 </script>
 
-<h5>Recent tasks</h5>
+<h5>Recently added tasks</h5>
 
 <table class="table table-striped my-sm-2">
     <thead>

@@ -2,20 +2,22 @@
     import {onMount} from 'svelte';
     import {recentTasksList} from './stores';
 
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     let description = '';
 
     const setNewRecentTask = (newTask) => {
         recentTasksList.update(tasks => {
             if (tasks.length >= 3) {
-                tasks.shift(); // remove the first task
+                tasks.shift();
             }
-            return [...tasks, newTask]; // add the new task
+            return [...tasks, newTask];
         });
     };
 
     async function submitForm(event) {
         event.preventDefault();
-        const response = await fetch('http://localhost:8080/api/tasks', {
+        const response = await fetch(`${API_BASE_URL}/api/tasks`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -24,7 +26,6 @@
         });
         if (response.ok) {
             const responseBody = await response.json();
-            console.log('Task added', responseBody);
             setNewRecentTask(responseBody);
             description = '';
         } else {
