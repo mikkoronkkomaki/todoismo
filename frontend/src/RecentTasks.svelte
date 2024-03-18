@@ -11,7 +11,7 @@
 
 <h5>Recently added tasks</h5>
 
-<table class="table table-striped my-sm-2">
+<table class="table table-dark  table-striped my-sm-2">
     <thead>
     <tr>
         <th>ID</th>

@@ -94,7 +94,7 @@
     <button class="btn btn-primary ms-2 no-wrap btn-width" on:click={() => searchTasks(0)}>Search</button>
 </div>
 
-<table class="table table-striped my-sm-2">
+<table class="table table-dark table-striped my-sm-2">
     <thead>
     <tr>
         <th>ID</th>

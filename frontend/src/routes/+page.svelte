@@ -11,7 +11,7 @@
         white-space: nowrap;
     }
     .display-1 {
-        text-align: center; 
+        text-align: center;
     }
 </style>
 
