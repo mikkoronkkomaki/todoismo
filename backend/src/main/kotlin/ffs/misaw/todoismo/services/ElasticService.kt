@@ -1,6 +1,7 @@
 package ffs.misaw.todoismo.services
 
 import ffs.misaw.todoismo.dataclasses.Task
+import org.json.JSONArray
 import org.springframework.stereotype.Service
 import java.net.URI
 import java.net.http.HttpClient
@@ -47,7 +48,24 @@ class ElasticService {
 
     fun searchTasks(searchText: String): List<Task> {
         val searchQuery = JSONObject()
-        searchQuery.put("query", JSONObject().put("wildcard", JSONObject().put("description.keyword", JSONObject().put("value", "*$searchText*").put("case_insensitive", true))))
+        searchQuery.put(
+            "query", JSONObject().put(
+                "wildcard",
+                JSONObject().put(
+                    "description.keyword",
+                    JSONObject().put("value", "*$searchText*").put("case_insensitive", true)
+                )
+            )
+        )
+
+        // Sort using the id field in descending order
+        searchQuery.put(
+            "sort", JSONArray().put(
+                JSONObject().put(
+                    "id", JSONObject().put("order", "desc")
+                )
+            )
+        )
 
         val request = HttpRequest.newBuilder()
             .uri(URI.create("${baseUrl}/tasks/_search"))
