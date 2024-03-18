@@ -1,5 +1,6 @@
 package ffs.misaw.todoismo.controllers
 
+import ffs.misaw.todoismo.dataclasses.PagedTasks
 import ffs.misaw.todoismo.dataclasses.Task
 import ffs.misaw.todoismo.services.ElasticService
 import ffs.misaw.todoismo.services.TaskService
@@ -38,8 +39,13 @@ class TaskController(
     }
 
     @GetMapping(value = ["/search"])
-    fun search(@RequestParam query: String, model: Model): ResponseEntity<List<Task>> {
-        val tasks  = elasticService.searchTasks(query)
+    fun search(
+        @RequestParam query: String,
+        @RequestParam(defaultValue = "0") from: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        model: Model
+    ): ResponseEntity<PagedTasks> {
+        val tasks = elasticService.searchTasks(query, from, size)
         return ResponseEntity.ok(tasks)
     }
 }

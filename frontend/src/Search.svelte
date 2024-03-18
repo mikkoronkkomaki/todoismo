@@ -5,20 +5,35 @@
 
     let searchQuery = '';
     let searchResults = [];
+    let remainingSearchResults = 0;
+    let pageLoadNumber = 0;
+    let itemsPerPage = 10
 
 
-    async function searchTasks() {
-        const response = await fetch(`${API_BASE_URL}/api/tasks/search?query=${searchQuery}`, {
+    async function searchTasks(currentPageLoadNumber) {
+        let from = currentPageLoadNumber * itemsPerPage;
+        let size = itemsPerPage;
+        const response = await fetch(`${API_BASE_URL}/api/tasks/search?query=${searchQuery || ''}&from=${from}&size=${size}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
         if (response.ok) {
-            searchResults = await response.json();
+            const searchResponse = await response.json();
+            searchResults = searchResponse.tasks;
+            remainingSearchResults = searchResponse.remaining;
         } else {
             console.error('Failed to search tasks');
         }
+    }
+
+    async function nextPage() {
+        await searchTasks(++pageLoadNumber);
+    }
+
+    async function previousPage() {
+        await searchTasks(--pageLoadNumber);
     }
 
     async function deleteTask(id) {
@@ -66,6 +81,9 @@
     .btn-width-small {
         width: 100px;
     }
+    .btn-margin {
+        margin-right: 10px;
+    }
 </style>
 
 
@@ -73,7 +91,7 @@
 
 <div class="d-flex justify-content-between">
     <input type="text" bind:value={searchQuery} placeholder="Search tasks" required class="form-control flex-grow">
-    <button class="btn btn-primary ms-2 no-wrap btn-width" on:click={searchTasks}>Search</button>
+    <button class="btn btn-primary ms-2 no-wrap btn-width" on:click={() => searchTasks(0)}>Search</button>
 </div>
 
 <table class="table table-striped my-sm-2">
@@ -109,3 +127,15 @@
     {/each}
     </tbody>
 </table>
+
+
+<div class="d-flex justify-content-center">
+    {#if pageLoadNumber > 0}
+        <button class="btn btn-primary btn-margin" on:click={previousPage}>Previous page</button>
+    {/if}
+    {#if remainingSearchResults > 0}
+        <button class="btn btn-primary btn-margin" on:click={nextPage}>Next page</button>
+    {/if}
+</div>
+
+

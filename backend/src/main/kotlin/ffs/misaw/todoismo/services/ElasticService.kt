@@ -1,5 +1,6 @@
 package ffs.misaw.todoismo.services
 
+import ffs.misaw.todoismo.dataclasses.PagedTasks
 import ffs.misaw.todoismo.dataclasses.Task
 import org.json.JSONArray
 import org.springframework.stereotype.Service
@@ -46,7 +47,7 @@ class ElasticService {
         }
     }
 
-    fun searchTasks(searchText: String): List<Task> {
+    fun searchTasks(searchText: String, from: Int, size: Int): PagedTasks {
         val searchQuery = JSONObject()
         searchQuery.put(
             "query", JSONObject().put(
@@ -57,8 +58,6 @@ class ElasticService {
                 )
             )
         )
-
-        // Sort using the id field in descending order
         searchQuery.put(
             "sort", JSONArray().put(
                 JSONObject().put(
@@ -66,6 +65,9 @@ class ElasticService {
                 )
             )
         )
+        searchQuery.put("from", from)
+        searchQuery.put("size", size)
+
 
         val request = HttpRequest.newBuilder()
             .uri(URI.create("${baseUrl}/tasks/_search"))
@@ -76,8 +78,12 @@ class ElasticService {
         val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
 
         val tasks = mutableListOf<Task>()
+        var totalHits = 0
         if (response.statusCode() == 200) {
-            val hits = JSONObject(response.body()).getJSONObject("hits").getJSONArray("hits")
+            val responseBody = JSONObject(response.body())
+            totalHits = responseBody.getJSONObject("hits").getJSONObject("total").getInt("value")
+            val hits = responseBody.getJSONObject("hits").getJSONArray("hits")
+
             (0 until hits.length())
                 .map { hits.getJSONObject(it).getJSONObject("_source") }
                 .mapTo(tasks) {
@@ -90,7 +96,8 @@ class ElasticService {
             throw RuntimeException("Failed to search tasks in Elasticsearch: ${response.body()}")
         }
 
-        return tasks
+        val remaining = totalHits - (from + size)
+        return PagedTasks(tasks, if (remaining > 0) remaining else 0)
     }
 
     fun updateTaskInElasticsearch(id: Long, description: String) {
