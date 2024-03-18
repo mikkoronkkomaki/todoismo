@@ -1,11 +1,11 @@
 <script>
-    import { onMount } from 'svelte';
+    import {onMount} from 'svelte';
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-
     let searchQuery = '';
     let searchResults = [];
+
 
     async function searchTasks() {
         const response = await fetch(`${API_BASE_URL}/api/tasks/search?query=${searchQuery}`, {
@@ -38,10 +38,10 @@
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ description: task.description })
+            body: JSON.stringify({description: task.description})
         });
         if (response.ok) {
-            const updatedTask = { ...task, isEditing: false };
+            const updatedTask = {...task, isEditing: false};
             searchResults = searchResults.map(t => t.id === task.id ? updatedTask : t);
         } else {
             console.error('Failed to update task');
@@ -54,16 +54,22 @@
     .flex-grow {
         flex-grow: 1;
     }
+
     .no-wrap {
         white-space: nowrap;
     }
+
     .btn-width {
         width: 200px;
     }
+
     .btn-width-small {
         width: 100px;
     }
 </style>
+
+
+<h5>Search tasks</h5>
 
 <div class="d-flex justify-content-between">
     <input type="text" bind:value={searchQuery} placeholder="Search tasks" required class="form-control flex-grow">
@@ -92,7 +98,8 @@
             <td>
                 {#if task.isEditing}
                     <button on:click={() => saveTask(task)} class="btn btn-width-small btn-success">Save</button>
-                    <button on:click={() => task.isEditing = false} class="btn btn-width-small btn-warning">Cancel</button>
+                    <button on:click={() => task.isEditing = false} class="btn btn-width-small btn-warning">Cancel
+                    </button>
                 {:else}
                     <button on:click={() => task.isEditing = true} class="btn btn-width-small btn-primary">Edit</button>
                     <button on:click={() => deleteTask(task.id)} class="btn btn-width-small btn-danger">Delete</button>

@@ -1,0 +1,30 @@
+<script>
+    import { onMount } from 'svelte';
+    import { recentTasksList } from './stores';
+
+    let recentTasks = [];
+
+    recentTasksList.subscribe(tasks => {
+        recentTasks = tasks.reverse();
+    });
+</script>
+
+<h5>Recent tasks</h5>
+
+<table class="table table-striped my-sm-2">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    {#each recentTasks as task (task.id)}
+        <tr>
+            <td>{task.id}</td>
+            <td>{task.description}</td>
+        </tr>
+    {/each}
+    </tbody>
+</table>
+
