@@ -1,12 +1,6 @@
 <script>
-    import { onMount } from 'svelte';
     import { recentTasksList } from './stores';
-
-    let recentTasks = [];
-
-    recentTasksList.subscribe(tasks => {
-        recentTasks = tasks.reverse();
-    });
+    $: recentTasks = [...$recentTasksList].reverse()
 </script>
 
 <h5>Recently added tasks</h5>

@@ -1,12 +1,12 @@
 <script>
-    import TaskForm from "../TaskForm.svelte";
-    import Search from "../Search.svelte";
-    import RecentTasks from "../RecentTasks.svelte";
+    import TaskForm from "../new-task.svelte";
+    import Search from "../search.svelte";
+    import RecentTasks from "../recent-tasks.svelte";
 </script>
 
 <style>
     .content {
-        width: 800px;
+        width: 50rem;
         margin: 0 auto;
         white-space: nowrap;
     }

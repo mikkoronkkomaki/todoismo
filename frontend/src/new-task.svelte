@@ -1,5 +1,4 @@
 <script>
-    import {onMount} from 'svelte';
     import {recentTasksList} from './stores';
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -8,15 +7,11 @@
 
     const setNewRecentTask = (newTask) => {
         recentTasksList.update(tasks => {
-            if (tasks.length >= 3) {
-                tasks.shift();
-            }
-            return [...tasks, newTask];
+            return [...tasks.slice(tasks.length >= 3 ? 1 : 0), newTask]
         });
-    };
+    }
 
     async function submitForm(event) {
-        event.preventDefault();
         const response = await fetch(`${API_BASE_URL}/api/tasks`, {
             method: 'POST',
             headers: {
@@ -44,13 +39,13 @@
     }
 
     .btn-width {
-        width: 200px;
+        width: 10rem;
     }
 </style>
 
 <h5>Add a new task</h5>
 
-<form on:submit={submitForm}>
+<form on:submit|preventDefault={submitForm}>
     <div class="d-flex justify-content-between">
         <input id="description" bind:value={description} required class="form-control flex-grow"
                placeholder="Task description">

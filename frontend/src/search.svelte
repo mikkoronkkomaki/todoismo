@@ -1,6 +1,4 @@
 <script>
-    import {onMount} from 'svelte';
-
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
     let searchQuery = '';
@@ -8,7 +6,6 @@
     let remainingSearchResults = 0;
     let pageLoadNumber = 0;
     let itemsPerPage = 10
-
 
     async function searchTasks(currentPageLoadNumber) {
         let from = currentPageLoadNumber * itemsPerPage;
@@ -69,20 +66,41 @@
     .flex-grow {
         flex-grow: 1;
     }
+    
+    .table {
+        table-layout: fixed;
+    }
 
     .no-wrap {
         white-space: nowrap;
     }
 
     .btn-width {
-        width: 200px;
+        width: 10rem;
     }
 
     .btn-width-small {
-        width: 100px;
+        width: 5rem;
     }
     .btn-margin {
-        margin-right: 10px;
+        margin-right: 2rem;
+    }
+    .common-column {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .id-column {
+        width: 5rem;
+    }
+
+    .description-column {
+        width: 30rem;
+    }
+
+    .action-column {
+        width: 11rem;
     }
 </style>
 
@@ -97,23 +115,23 @@
 <table class="table table-dark table-striped my-sm-2">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Description</th>
-        <th>Action</th>
+        <th class="common-column id-column">ID</th>
+        <th class="common-column description-column">Description</th>
+        <th class="common-column action-column">Action</th>
     </tr>
     </thead>
     <tbody>
     {#each searchResults as task (task.id)}
         <tr>
-            <td>{task.id}</td>
-            <td>
+            <td class="common-column id-column">{task.id}</td>
+            <td class="common-column description-column">
                 {#if task.isEditing}
                     <input type="text" bind:value={task.description} class="form-control">
                 {:else}
-                    {task.description}
                 {/if}
+                {task.description}
             </td>
-            <td>
+            <td class="common-column action-column">
                 {#if task.isEditing}
                     <button on:click={() => saveTask(task)} class="btn btn-width-small btn-success">Save</button>
                     <button on:click={() => task.isEditing = false} class="btn btn-width-small btn-warning">Cancel
@@ -131,10 +149,10 @@
 
 <div class="d-flex justify-content-center">
     {#if pageLoadNumber > 0}
-        <button class="btn btn-primary btn-margin" on:click={previousPage}>Previous page</button>
+        <button class="btn btn-primary btn-width btn-margin" on:click={previousPage}>Previous page</button>
     {/if}
     {#if remainingSearchResults > 0}
-        <button class="btn btn-primary btn-margin" on:click={nextPage}>Next page</button>
+        <button class="btn btn-primary btn-width btn-margin" on:click={nextPage}>Next page</button>
     {/if}
 </div>
 
