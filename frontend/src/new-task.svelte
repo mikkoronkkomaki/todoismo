@@ -1,17 +1,18 @@
-<script>
+<script lang="ts">
     import {recentTasksList} from './stores';
+    import type {Task}  from "./task";
 
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
     let description = '';
 
-    const setNewRecentTask = (newTask) => {
+    const setNewRecentTask = (newTask: Task) => {
         recentTasksList.update(tasks => {
             return [...tasks.slice(tasks.length >= 3 ? 1 : 0), newTask]
         });
     }
 
-    async function submitForm(event) {
+    async function saveTask(event) {
         const response = await fetch(`${API_BASE_URL}/api/tasks`, {
             method: 'POST',
             headers: {
@@ -45,7 +46,7 @@
 
 <h5>Add a new task</h5>
 
-<form on:submit|preventDefault={submitForm}>
+<form on:submit|preventDefault={saveTask}>
     <div class="d-flex justify-content-between">
         <input id="description" bind:value={description} required class="form-control flex-grow"
                placeholder="Task description">

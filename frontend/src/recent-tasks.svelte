@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { recentTasksList } from './stores';
     $: recentTasks = [...$recentTasksList].reverse()
 </script>

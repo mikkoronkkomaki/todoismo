@@ -1,13 +1,15 @@
-<script>
+<script lang="ts">
+    import type {Task} from "./task";
+
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
     let searchQuery = '';
-    let searchResults = [];
+    let searchResults: Task[] = [];
     let remainingSearchResults = 0;
     let pageLoadNumber = 0;
     let itemsPerPage = 10
 
-    async function searchTasks(currentPageLoadNumber) {
+    async function searchTasks(currentPageLoadNumber : number = 0) {
         let from = currentPageLoadNumber * itemsPerPage;
         let size = itemsPerPage;
         const response = await fetch(`${API_BASE_URL}/api/tasks/search?query=${searchQuery || ''}&from=${from}&size=${size}`, {
@@ -33,7 +35,7 @@
         await searchTasks(--pageLoadNumber);
     }
 
-    async function deleteTask(id) {
+    async function deleteTask(id : number) {
         const response = await fetch(`${API_BASE_URL}/api/tasks/${id}`, {
             method: 'DELETE',
         });
@@ -44,7 +46,7 @@
         }
     }
 
-    async function saveTask(task) {
+    async function saveTask(task : Task) {
         const response = await fetch(`${API_BASE_URL}/api/tasks/${task.id}`, {
             method: 'PUT',
             headers: {
