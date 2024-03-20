@@ -1,0 +1,41 @@
+.btn-width {
+    width: 10rem;
+}
+
+.btn-width-small {
+    width: 5rem;
+}
+
+.btn-margin {
+    margin-right: 2rem;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.no-wrap {
+    white-space: nowrap;
+}
+
+.table {
+    table-layout: fixed;
+}
+
+.common-column {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.id-column {
+    width: 5rem;
+}
+
+.description-column {
+    width: 30rem;
+}
+
+.action-column {
+    width: 11rem;
+}

@@ -12,7 +12,7 @@
         });
     }
 
-    async function saveTask(event) {
+    async function saveTask() {
         const response = await fetch(`${API_BASE_URL}/api/tasks`, {
             method: 'POST',
             headers: {
@@ -29,20 +29,6 @@
         }
     }
 </script>
-
-<style>
-    .flex-grow {
-        flex-grow: 1;
-    }
-
-    .no-wrap {
-        white-space: nowrap;
-    }
-
-    .btn-width {
-        width: 10rem;
-    }
-</style>
 
 <h5>Add a new task</h5>
 
