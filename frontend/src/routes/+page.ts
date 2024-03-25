@@ -1,39 +1,31 @@
-import type {PageLoad} from "./$types"
-import type {SearchResults} from "../search-results";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-let itemsPerPage = 10
-
-async function searchTasks(currentPage: number = 0, size: number = 10, searchQuery: string = ''): Promise<SearchResults> {
-    let from = currentPage * itemsPerPage;
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/tasks/search?query=${searchQuery || ''}&from=${from}&size=${size}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        return await response.json();
-    } catch (error) {
-        console.error('Error:', error);
-        return {tasks: [], remaining: 0};
-    }
+let API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+interface LoadParams {
+	url: {
+		searchParams: URLSearchParams;
+	};
 }
+export const load = async ({fetch, url: { searchParams } }: LoadParams) => {
+	const query = searchParams.get('query') || '';
+	const page = Number(searchParams.get('page')) || 0;
+	const resultsPerPage = 10;
 
-export const load: PageLoad = async ({url: {searchParams}}) => {
-    const currentPage = Number(searchParams.get('currentPage')) || 0;
-    const size = Number(searchParams.get('size')) || itemsPerPage;
-    const query = searchParams.get('query') || "";
-    const searchResults = await searchTasks(currentPage, size, query);
+	let url = new URL(`${API_BASE_URL}/api/tasks/search`);
+	let from  = (page * resultsPerPage).toString();
+	let size = resultsPerPage.toString();
 
-    return {
-        currentPage,
-        size,
-        query,
-        foundTasks: searchResults.tasks,
-        remainingTasks: searchResults.remaining
-    }
-}
+	url.searchParams.set('query', query);
+	url.searchParams.set('from',  from);
+	url.searchParams.set('size', size);
 
+	let response = await fetch(url);
+	
+	if (!response.ok) {
+		throw new Error(`HTTP error! status: ${response.status}`);
+	}
 
-
+	let data = await response.json();
+	data.page = page;
+	data.query = query;
+	
+	return data;
+};

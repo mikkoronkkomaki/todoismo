@@ -18,14 +18,14 @@ class TaskService(
         return taskRepository.getTask(taskId)
     }
 
-    fun saveTask(description: String): Task {
-        val newTask = taskRepository.saveTask(description)
+    fun insertTask(description: String): Task {
+        val newTask = taskRepository.insertTask(description)
         elasticService.indexTask(newTask)
         return newTask
     }
-    fun updateTask(id: Long, description: String) {
-        taskRepository.updateTask(id, description)
-        elasticService.updateTask(id, description)
+    fun updateTask(id: Long, description: String, done: Boolean) {
+        taskRepository.updateTask(id, description, done)
+        elasticService.updateTask(id, description, done)
     }
 
     fun deleteTask(id: Long) {

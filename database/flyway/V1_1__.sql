@@ -5,5 +5,6 @@ CREATE TABLE todoismo.task
     id     SERIAL  NOT NULL
         CONSTRAINT pk_task
             PRIMARY KEY,
-    description VARCHAR NOT NULL
+    description VARCHAR NOT NULL,
+    done BOOLEAN DEFAULT FALSE
 );

@@ -22,13 +22,13 @@ class TaskController(
 
     @PostMapping
     fun createTask(@RequestBody task: Task): ResponseEntity<Task> {
-        val savedTask = taskService.saveTask(task.description)
+        val savedTask = taskService.insertTask(task.description)
         return ResponseEntity.ok(savedTask)
     }
 
     @PutMapping("{id}")
     fun updateTask(@PathVariable id: Long, @RequestBody task: Task): ResponseEntity<Void> {
-        taskService.updateTask(id, task.description)
+        taskService.updateTask(id, task.description, task.done)
         return ResponseEntity.noContent().build()
     }
 

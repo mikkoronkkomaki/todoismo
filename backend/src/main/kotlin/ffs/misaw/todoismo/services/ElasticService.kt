@@ -20,6 +20,7 @@ class ElasticService {
         val taskJson = JSONObject()
         taskJson.put("id", task.id)
         taskJson.put("description", task.description)
+        taskJson.put("done", task.done)
 
         val request = HttpRequest.newBuilder()
             .uri(URI.create("${baseUrl}/tasks/_doc/${task.id}"))
@@ -47,11 +48,11 @@ class ElasticService {
         }
     }
 
-    fun updateTask(id: Long, description: String) {
+    fun updateTask(id: Long, description: String, done: Boolean) {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("${baseUrl}/tasks/_doc/$id/_update"))
             .header("Content-Type", "application/json")
-            .POST(HttpRequest.BodyPublishers.ofString("{\"doc\": {\"description\": \"${description}\"}}"))
+            .POST(HttpRequest.BodyPublishers.ofString("{\"doc\": {\"description\": \"${description}\", \"done\": ${done}}}"))
             .build()
 
         val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
@@ -114,7 +115,8 @@ class ElasticService {
                 .mapTo(tasks) {
                     Task(
                         id = it.getLong("id"),
-                        description = it.getString("description")
+                        description = it.getString("description"),
+                        done = if (it.has("done")) it.getBoolean("done") else false
                     )
                 }
         } else {

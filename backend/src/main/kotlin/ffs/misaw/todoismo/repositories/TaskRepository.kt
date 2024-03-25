@@ -12,16 +12,17 @@ class TaskRepository(private val jdbcTemplate: JdbcTemplate) {
 
     fun getAllTasks(): List<Task> {
         return jdbcTemplate.query(
-            "SELECT id, description FROM task"
+            "SELECT id, description, done FROM task"
         ) { rs, _ ->
             Task(
                 rs.getLong("id"),
-                rs.getString("description")
+                rs.getString("description"),
+                rs.getBoolean("done")
             )
         }
     }
 
-    fun saveTask(description: String): Task {
+    fun insertTask(description: String): Task {
         val keyHolder: KeyHolder = GeneratedKeyHolder()
 
         jdbcTemplate.update(
@@ -39,12 +40,13 @@ class TaskRepository(private val jdbcTemplate: JdbcTemplate) {
 
     fun getTask(taskId: Long): Task {
         return jdbcTemplate.query(
-            "SELECT id, description FROM task WHERE id = ?",
+            "SELECT id, description, done FROM task WHERE id = ?",
             arrayOf(taskId)
         ) { rs, _ ->
             Task(
                 rs.getLong("id"),
-                rs.getString("description")
+                rs.getString("description"),
+                rs.getBoolean("done")
             )
         }.first()
     }
@@ -56,10 +58,11 @@ class TaskRepository(private val jdbcTemplate: JdbcTemplate) {
         )
     }
 
-    fun updateTask(id: Long, description: String) {
+    fun updateTask(id: Long, description: String, done: Boolean) {
         jdbcTemplate.update(
-            "UPDATE task SET description = ? WHERE id = ?",
+            "UPDATE task SET description = ?, done = ? WHERE id = ?",
             description,
+            done,
             id
         )
     }
